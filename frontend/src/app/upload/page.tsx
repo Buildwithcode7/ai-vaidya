@@ -110,6 +110,8 @@ export default function UploadPage() {
       "application/pdf": [".pdf"],
       "text/plain": [".txt"],
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
+      "image/png": [".png"],
+      "image/jpeg": [".jpg", ".jpeg"],
     },
     maxSize: 100 * 1024 * 1024,
   });
@@ -163,7 +165,7 @@ export default function UploadPage() {
                     or click to browse files
                   </p>
                   <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap" }}>
-                    {["PDF", "TXT", "DOCX"].map(fmt => (
+                    {["PDF", "TXT", "DOCX", "PNG", "JPG"].map(fmt => (
                       <span key={fmt} className="tag-pill" style={{ fontSize: "0.75rem" }}>.{fmt.toLowerCase()}</span>
                     ))}
                   </div>

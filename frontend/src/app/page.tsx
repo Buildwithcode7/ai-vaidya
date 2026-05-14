@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import {
   Leaf, MessageCircle, Upload, Star, ChevronRight,
-  BookOpen, Zap, Shield, Brain, Microscope
+  BookOpen, Zap, Shield, Brain, Microscope , Database, Code2
 } from "lucide-react";
 
 const features = [

@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import { Leaf, Github, Code2, Database, Brain, Shield, Zap, BookOpen } from "lucide-react";
+import { Leaf, Code2, Database, Brain, Shield, Zap, BookOpen } from "lucide-react";
 import Link from "next/link";
 
 const techStack = [
@@ -153,9 +153,9 @@ export default function AboutPage() {
             <Link href="/upload" className="btn-primary">
               <BookOpen size={16} /> Get Started
             </Link>
-            <a href="https://github.com/Buildwithcode7/RoomVerse-AI" target="_blank" rel="noopener noreferrer" className="btn-secondary">
+            {/* <a href="https://github.com/Buildwithcode7/RoomVerse-AI" target="_blank" rel="noopener noreferrer" className="btn-secondary">
               <Github size={16} /> View on GitHub
-            </a>
+            </a> */}
           </div>
           <p style={{ marginTop: 16, fontSize: "0.8rem", color: "var(--text-muted)" }}>
             MIT License · Built with open-source AI tools

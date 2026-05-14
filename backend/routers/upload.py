@@ -23,9 +23,7 @@ from services.document_processor import DocumentProcessor
 
 router = APIRouter(prefix="/upload", tags=["Upload"])
 processor = DocumentProcessor()
-
-ALLOWED_EXTENSIONS = {".pdf", ".txt", ".docx", ".doc"}
-
+ALLOWED_EXTENSIONS = {".pdf", ".txt", ".docx", ".doc", ".png", ".jpg", ".jpeg"}
 
 @router.post("/", response_model=DocumentUploadResponse)
 async def upload_document(

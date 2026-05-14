@@ -137,13 +137,22 @@ class DocumentProcessor:
         ext = Path(filename).suffix.lower()
 
         if ext == ".pdf":
-            return await asyncio.to_thread(self._extract_pdf, file_path)
+            pages = await asyncio.to_thread(self._extract_pdf, file_path)
         elif ext == ".txt":
-            return self._extract_txt(file_path)
+            pages = self._extract_txt(file_path)
         elif ext in [".docx", ".doc"]:
-            return await asyncio.to_thread(self._extract_docx, file_path)
+            pages = await asyncio.to_thread(self._extract_docx, file_path)
+        elif ext in [".png", ".jpg", ".jpeg"]:
+            pages = await asyncio.to_thread(self._extract_image, file_path)
         else:
             raise ValueError(f"Unsupported file type: {ext}")
+
+        # Translate to English if needed
+        for page in pages:
+            if page.get("text"):
+                page["text"] = await asyncio.to_thread(self._translate_to_english, page["text"])
+        
+        return pages
 
     def _extract_pdf(self, file_path: str) -> List[Dict]:
         pages = []
@@ -194,9 +203,41 @@ class DocumentProcessor:
 
     def _clean_text(self, text: str) -> str:
         text = re.sub(r'\s+', ' ', text)
-        text = re.sub(r'[^\x00-\x7F]+', ' ', text)  # remove non-ASCII
+        # We removed non-ASCII stripping here to preserve other languages before translation
         text = re.sub(r'(\w)-\n(\w)', r'\1\2', text)  # fix hyphenation
         return text.strip()
+
+    def _extract_image(self, file_path: str) -> List[Dict]:
+        try:
+            import pytesseract
+            from PIL import Image
+            img = Image.open(file_path)
+            text = pytesseract.image_to_string(img)
+            if text.strip():
+                return [{"page_number": 1, "text": self._clean_text(text)}]
+            return []
+        except Exception as e:
+            logger.error(f"Image extraction error: {e}")
+            return []
+
+    def _translate_to_english(self, text: str) -> str:
+        """Translate text to English if it is in another language."""
+        try:
+            from deep_translator import GoogleTranslator
+            translator = GoogleTranslator(source='auto', target='en')
+            translated_chunks = []
+            # Google Translate API has a 5000 character limit
+            for i in range(0, len(text), 4500):
+                chunk = text[i:i+4500]
+                translated = translator.translate(chunk)
+                if translated:
+                    translated_chunks.append(translated)
+                else:
+                    translated_chunks.append(chunk)
+            return " ".join(translated_chunks)
+        except Exception as e:
+            logger.error(f"Translation error: {e}")
+            return text
 
     # ─── Chunking ─────────────────────────────────────────────────
     def _chunk_pages(self, pages: List[Dict], document_id: str, filename: str) -> List[Dict]:
