@@ -250,7 +250,16 @@ function ChatPageContent() {
   const clearChat = () => { setMessages([]); window.speechSynthesis?.cancel(); };
 
   return (
-    <div style={{ height: "calc(100vh - 64px)", display: "flex", overflow: "hidden" }}>
+    <div  style={{
+      height: "calc(100vh - 64px)",
+      display: "flex",
+      overflow: "hidden",
+      backgroundImage: "url('/image/chartbox.avif')",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+      position: "relative",
+    }}>
       {/* ── Sidebar ─────────────────────────────────────────── */}
       <aside style={{
         width: 260, flexShrink: 0,

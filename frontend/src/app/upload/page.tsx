@@ -25,6 +25,7 @@ export default function UploadPage() {
   const [uploads, setUploads] = useState<UploadingFile[]>([]);
   const [documents, setDocuments] = useState<DocumentMetadata[]>([]);
   const [loadingDocs, setLoadingDocs] = useState(true);
+  
 
   // Load existing documents
   const loadDocuments = useCallback(async () => {
@@ -137,7 +138,17 @@ export default function UploadPage() {
   };
 
   return (
-    <div className="page-container bg-grid">
+    <div
+          className="page-container bg-grid relative min-h-screen"
+          style={{
+            backgroundImage: "url('/image/ayurveda.webp')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        >
+          {/* ADD THIS NEW LINE RIGHT HERE */}
+     <div className="absolute inset-0 bg-black/60" />
+     <div className="relative z-10" />   
       <div className="main-content" style={{ maxWidth: 1100 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <h1 className="heading-serif" style={{ fontSize: "2rem", marginBottom: 8 }}>
