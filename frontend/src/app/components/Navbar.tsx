@@ -4,9 +4,10 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Leaf, MessageCircle, Upload, Database, Info,
-  Search, Activity, Menu, X
+  Search, Activity, Menu, X, LogIn, LogOut, User
 } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
 
 const navItems = [
   { href: "/", label: "Home", icon: Leaf },
@@ -20,6 +21,7 @@ const navItems = [
 export default function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
 
   return (
     <nav
@@ -75,8 +77,8 @@ export default function Navbar() {
             })}
           </div>
 
-          {/* Status Dot */}
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }} className="hidden md:flex">
+          {/* Actions & Status */}
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }} className="hidden md:flex">
             <div style={{
               display: "flex", alignItems: "center", gap: 6,
               padding: "6px 12px",
@@ -91,6 +93,21 @@ export default function Navbar() {
               }} />
               <span style={{ fontSize: "0.75rem", color: "#8bc34a", fontWeight: 600 }}>Live</span>
             </div>
+            {user ? (
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 6, color: "var(--text-secondary)", fontSize: "0.85rem", background: "rgba(0,137,123,0.1)", padding: "4px 12px", borderRadius: 999, border: "1px solid var(--border-subtle)" }}>
+                  <User size={14} />
+                  {user.email.split('@')[0]}
+                </div>
+                <button onClick={logout} className="btn-secondary" style={{ padding: "6px 12px", fontSize: "0.85rem" }}>
+                  <LogOut size={16} />
+                </button>
+              </div>
+            ) : (
+              <Link href="/login" className="btn-primary" style={{ padding: "8px 16px", fontSize: "0.85rem" }}>
+                Sign In
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -132,6 +149,27 @@ export default function Navbar() {
                 </Link>
               );
             })}
+            <div style={{ height: "1px", background: "var(--border-subtle)", margin: "8px 0" }} />
+            {user ? (
+              <button
+                onClick={() => { logout(); setMenuOpen(false); }}
+                className="nav-link"
+                style={{ display: "flex", width: "100%", background: "none", border: "none", textAlign: "left", cursor: "pointer", marginBottom: 4 }}
+              >
+                <LogOut size={16} />
+                Logout ({user.email.split('@')[0]})
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                className={`nav-link ${pathname === "/login" ? "active" : ""}`}
+                style={{ display: "flex", marginBottom: 4 }}
+                onClick={() => setMenuOpen(false)}
+              >
+                <LogIn size={16} />
+                Sign In
+              </Link>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
